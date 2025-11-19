@@ -1,68 +1,65 @@
-// Basit Java Dosya Okuma-Yazma Projesi
-// FileIOProject.java
+// Basit C++ Dosya Okuma - Yazma Projesi
+// FileIOProject.cpp
 
-import java.io.*;
-import java.util.*;
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
 
-public class FileIOProject {
-    private static final String FILE_NAME = "data.txt";
+const string FILE_NAME = "data.txt";
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            System.out.println("\n=== DOSYA OKUMA - YAZMA PROJESİ ===");
-            System.out.println("1) Dosyaya yaz");
-            System.out.println("2) Dosyadan oku");
-            System.out.println("3) Çıkış");
-            System.out.print("Seçiminiz: ");
+void dosyayaYaz(const string& metin) {
+    ofstream file(FILE_NAME, ios::app);
+    if (!file) {
+        cout << "Yazma hatası!" << endl;
+        return;
+    }
+    file << metin << endl;
+    cout << "Metin başarıyla dosyaya yazıldı." << endl;
+}
 
-            int secim = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (secim) {
-                case 1:
-                    System.out.print("Yazılacak metni girin: ");
-                    String metin = scanner.nextLine();
-                    dosyayaYaz(metin);
-                    break;
-
-                case 2:
-                    dosyadanOku();
-                    break;
-
-                case 3:
-                    System.out.println("Çıkılıyor...");
-                    return;
-
-                default:
-                    System.out.println("Hatalı seçim!");
-            }
-        }
+void dosyadanOku() {
+    ifstream file(FILE_NAME);
+    if (!file) {
+        cout << "Dosya bulunamadı. Önce dosyaya yazmayı deneyin." << endl;
+        return;
     }
 
-    // Dosyaya yazma
-    public static void dosyayaYaz(String metin) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true))) {
-            writer.write(metin);
-            writer.newLine();
-            System.out.println("Metin başarıyla dosyaya yazıldı.");
-        } catch (IOException e) {
-            System.out.println("Yazma hatası: " + e.getMessage());
-        }
+    string satir;
+    cout << "--- DOSYA İÇERİĞİ ---" << endl;
+    while (getline(file, satir)) {
+        cout << satir << endl;
     }
+}
 
-    // Dosyadan okuma
-    public static void dosyadanOku() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
-            String satir;
-            System.out.println("--- DOSYA İÇERİĞİ ---");
-            while ((satir = reader.readLine()) != null) {
-                System.out.println(satir);
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("Dosya bulunamadı. Önce dosyaya yazmayı deneyin.");
-        } catch (IOException e) {
-            System.out.println("Okuma hatası: " + e.getMessage());
+int main() {
+    int secim;
+    string metin;
+
+    while (true) {
+        cout << "\n=== DOSYA OKUMA - YAZMA PROJESİ ===" << endl;
+        cout << "1) Dosyaya yaz" << endl;
+        cout << "2) Dosyadan oku" << endl;
+        cout << "3) Çıkış" << endl;
+        cout << "Seçiminiz: ";
+        cin >> secim;
+        cin.ignore(); // Buffer temizleme
+
+        switch (secim) {
+            case 1:
+                cout << "Yazılacak metni girin: ";
+                getline(cin, metin);
+                dosyayaYaz(metin);
+                break;
+            case 2:
+                dosyadanOku();
+                break;
+            case 3:
+                cout << "Çıkılıyor..." << endl;
+                return 0;
+            default:
+                cout << "Hatalı seçim!" << endl;
         }
     }
 }
+
